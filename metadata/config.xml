@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<module configVersion="1.2">
+	
+	<!-- Referral Alerts Module Properties -->
+	
+	<id>referralalerts</id>
+	<name>Referral Alerts Module</name>
+	<version>0.1</version>
+	<package>org.openmrs.module.@MODULE_ID@</package>
+	<author>Jembi Health Systems</author>
+	<description>
+			Generates SHR and RapidSMS alerts upon submission of referral and referral confirmation forms
+	</description>
+
+	<activator>@MODULE_PACKAGE@.ReferralAlertsActivator</activator>
+	
+	<require_version>1.6.5</require_version>
+	
+	<!-- Require modules -->
+	
+	<!-- Extensions -->
+	
+	<!-- Hibernate Mappings
+	<mappingFiles>
+		
+	</mappingFiles>
+	-->
+	
+	<!-- AOP
+	<advice>
+		<point>org.openmrs.api.FormService</point>
+		<class>@MODULE_PACKAGE@.advice.DuplicateFormAdvisor</class>
+	</advice>
+	 /AOP -->
+	<advice>
+		<point>org.openmrs.api.EncounterService</point>
+		<class>@MODULE_PACKAGE@.advice.ReferralEncounterAdvice</class>
+	</advice> 
+	
+	<!-- Required Privileges -->	 
+	
+	 <!-- Required Privileges -->
+
+	<!-- Required Global Properties
+	<globalProperty>
+		<property>@MODULE_ID@.</property>
+		<defaultValue></defaultValue>
+		<description>
+
+		</description>
+	</globalProperty>
+	Required Global Properties -->
+		
+	<!--
+	<dwr>
+		<allow>
+			<create creator="new" javascript="DWRFormEntryService">
+				<param name="class" value="org.openmrs.module.@MODULE_ID@.web.DWRFormEntryService"/>
+				<include method="enterForm"/>
+			</create>
+		</allow>
+
+		<signatures>
+			<![CDATA[
+			import @MODULE_PACKAGE@.web.DWRFormEntryService;
+			DWRFormEntryService.enterForm(Integer patientId, Integer formId, boolean useEncounter, List<String> fields);
+			]]>
+		</signatures>	
+	</dwr>
+	-->
+	
+	<!-- Servlets -->
+	<!-- Accessed through the url /pageContext()/moduleServlet/<moduleId>/<servlet-name> 
+	<servlet>
+		<servlet-name>formDownload</servlet-name>
+		<servlet-class>@MODULE_PACKAGE@.web.FormDownloadServlet</servlet-class>
+	</servlet>
+	-->
+	<!-- /Servlets -->
+	
+	
+	<!-- Internationalization -->
+	<!-- All message codes should start with @MODULE_ID@.* -->
+	<messages>
+		<lang>en</lang>
+		<file>messages.properties</file>
+	</messages>	
+	<messages>
+		<lang>fr</lang>
+		<file>messages_fr.properties</file>
+	</messages>	
+	<messages>
+		<lang>rw</lang>
+		<file>messages_rw.properties</file>
+	</messages>	
+	<!-- /Internationalization -->
+	
+	<!-- Group Testing Module Properties -->
+	
+</module>
+
