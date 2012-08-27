@@ -13,6 +13,7 @@ import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.referralalerts.ReferralAlertsService;
 import org.openmrs.module.referralalerts.Urgency;
 import org.openmrs.scheduler.tasks.AbstractTask;
 
@@ -73,6 +74,9 @@ public class ReferralReminderAlertTask extends AbstractTask {
 			" for patient " + enc.getPatient().getPersonName() + " (patientId=" + enc.getPatientId() + ")");
 		log.info("Generating alert for referral encounter on " + enc.getEncounterDatetime() +
 			" for patient " + enc.getPatient().getPersonName() + " (patientId=" + enc.getPatientId() + ")");
+		
+		ReferralAlertsService ras = Context.getService(ReferralAlertsService.class);
+		ras.processReferralEncounter(enc);
 	}
 	
 	
