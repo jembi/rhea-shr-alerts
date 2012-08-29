@@ -21,6 +21,7 @@ import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.referralalerts.ReferralAlertsService;
+import org.openmrs.module.referralalerts.Urgency;
 import org.springframework.aop.AfterReturningAdvice;
 
 /**
@@ -43,7 +44,8 @@ public class ReferralEncounterAdvice implements AfterReturningAdvice {
 			if (enc.getEncounterType().equals(referralEncounterType)) {
 				log.info("Processing referral encounter for patientId=" + enc.getPatientId());
 				System.out.println("Processing referral encounter for patientId=" + enc.getPatientId());
-				ras.processReferralEncounter(enc);
+				if (Urgency.getUrgencyForEncounter(enc).equals(Urgency.IMMEDIATE))
+					ras.sendAlertMessageToRapidSMS(enc.getPatient());
 			}
 		}
 	}
