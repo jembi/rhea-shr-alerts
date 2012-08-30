@@ -45,7 +45,7 @@ public class ReferralEncounterAdvice implements AfterReturningAdvice {
 				log.info("Processing referral encounter for patientId=" + enc.getPatientId());
 				System.out.println("Processing referral encounter for patientId=" + enc.getPatientId());
 				if (Urgency.getUrgencyForEncounter(enc).equals(Urgency.IMMEDIATE))
-					ras.sendAlertMessageToRapidSMS(enc.getPatient());
+					ras.sendAlertMessageToRapidSMS(enc);
 			}
 		}
 	}

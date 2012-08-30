@@ -76,7 +76,7 @@ public class ReferralReminderAlertTask extends AbstractTask {
 			" for patient " + enc.getPatient().getPersonName() + " (patientId=" + enc.getPatientId() + ")");
 		
 		ReferralAlertsService ras = Context.getService(ReferralAlertsService.class);
-		ras.sendAlertMessageToRapidSMS(enc.getPatient());
+		ras.sendAlertMessageToRapidSMS(enc);
 	}
 	
 	
