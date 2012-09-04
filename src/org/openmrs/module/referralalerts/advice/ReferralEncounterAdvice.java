@@ -38,6 +38,8 @@ public class ReferralEncounterAdvice implements AfterReturningAdvice {
 			Encounter enc = null;
 			if(returnValue != null)
 				enc = (Encounter)returnValue;
+			else
+				return;
 
 			EncounterType referralEncounterType = Context.getEncounterService().getEncounterType("ANC Referral");
 			ReferralAlertsService ras = Context.getService(ReferralAlertsService.class);
