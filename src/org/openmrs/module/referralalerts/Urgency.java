@@ -25,7 +25,7 @@ public enum Urgency {
 				switch (obs.getValueCoded().getConceptId()) {
 					case 8515: return URGENT;
 					case 8516: return NON_URGENT;
-					//TODO Immediate
+					case 8612: return IMMEDIATE;
 				}
 			}
 		}
