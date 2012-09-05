@@ -18,6 +18,9 @@
 	<require_version>1.6.5</require_version>
 	
 	<!-- Require modules -->
+	<require_modules>
+		<require_module>org.jembi.rhea.module.RHEASHRadapter-omod</require_module>
+	</require_modules>
 	
 	<!-- Extensions -->
 	
