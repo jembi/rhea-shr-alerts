@@ -33,8 +33,10 @@ public class ReferralEncounterAdvice implements AfterReturningAdvice {
 
 	
 	public void afterReturning(Object returnValue, Method method, Object[] args, Object target) throws Throwable {
+		System.out.println("Entering the 'afterReturning' method");
 		try {
 			if (method.getName().contains("saveEncounter")) {
+				System.out.println("In referralalerts encounter advice.");
 				log.info("In referralalerts encounter advice.");
 				Encounter enc = null;
 				if(returnValue != null)
