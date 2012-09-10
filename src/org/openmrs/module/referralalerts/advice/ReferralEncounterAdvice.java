@@ -33,11 +33,11 @@ public class ReferralEncounterAdvice implements AfterReturningAdvice {
 
 	
 	public void afterReturning(Object returnValue, Method method, Object[] args, Object target) throws Throwable {
-		System.out.println("Entering the 'afterReturning' method");
 		try {
 			if (method.getName().contains("saveEncounter")) {
 				System.out.println("In referralalerts encounter advice.");
 				log.info("In referralalerts encounter advice.");
+				
 				Encounter enc = null;
 				if(returnValue != null)
 					enc = (Encounter)returnValue;
@@ -48,11 +48,12 @@ public class ReferralEncounterAdvice implements AfterReturningAdvice {
 				ReferralAlertsService ras = Context.getService(ReferralAlertsService.class);
 				
 				if (enc.getEncounterType().equals(referralEncounterType)) {
+					System.out.println("Processing referral encounter for patientId=" + enc.getPatient().getId());
 					log.info("Processing referral encounter for patientId=" + enc.getPatient().getId());
-					if (Urgency.getUrgencyForEncounter(enc) != null){
-					if (Urgency.getUrgencyForEncounter(enc).equals(Urgency.IMMEDIATE))
-						ras.sendAlertMessageToRapidSMS(enc);
-					}
+					
+					if (Urgency.getUrgencyForEncounter(enc)!=null &&
+						Urgency.getUrgencyForEncounter(enc).equals(Urgency.IMMEDIATE))
+							ras.sendAlertMessageToRapidSMS(enc);
 				}
 			}
 		} catch (Exception ex) {

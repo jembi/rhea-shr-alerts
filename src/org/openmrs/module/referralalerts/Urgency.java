@@ -1,5 +1,7 @@
 package org.openmrs.module.referralalerts;
 
+import org.openmrs.Concept;
+import org.openmrs.ConceptMap;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
 
@@ -21,15 +23,22 @@ public enum Urgency {
 	
 	public static Urgency getUrgencyForEncounter(Encounter enc) {
 		for (Obs obs : enc.getAllObs()) {
-			if (obs.getConcept().getConceptId().equals(8517)) {
-				switch (obs.getValueCoded().getConceptId()) {
-					case 8515: return URGENT;
-					case 8516: return NON_URGENT;
-					case 8612: return IMMEDIATE;
-				}
+			if ("8517".equals(RWCSCode(obs.getConcept()))) {
+				String code = RWCSCode(obs.getValueCoded());
+				if ("8515".equals(code)) return URGENT;
+				if ("8516".equals(code)) return NON_URGENT;
+				if ("8612".equals(code)) return IMMEDIATE;
 			}
 		}
 		
+		return null;
+	}
+	
+	private static String RWCSCode(Concept c) {
+		for (ConceptMap map : c.getConceptMappings()) {
+			if ("RWCS".equalsIgnoreCase(map.getSource().getName()))
+				return map.getSourceCode().trim();
+		}
 		return null;
 	}
 }

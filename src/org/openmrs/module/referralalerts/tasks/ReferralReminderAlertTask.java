@@ -28,13 +28,16 @@ public class ReferralReminderAlertTask extends AbstractTask {
 		log.info("Running referral reminder alert task");
 		
 		EncounterService es = Context.getEncounterService();
-		for (Urgency urg : Urgency.values())
-			searchForAndGenerateAlerts(es, urg.getDaysAgo());
+		for (Urgency urg : Urgency.values()) {
+			if (urg.equals(Urgency.IMMEDIATE))
+				continue; //aop advice would've picked this referrals with this urgency up
+			searchForAndGenerateAlerts(es, urg);
+		}
 	}
 
-	private void searchForAndGenerateAlerts(EncounterService es, int daysAgo) {
-		DateMidnight from = new DateMidnight().minusDays(daysAgo);
-		DateMidnight rto = new DateMidnight().minusDays(daysAgo-1);
+	private void searchForAndGenerateAlerts(EncounterService es, Urgency urg) {
+		DateMidnight from = new DateMidnight().minusDays(urg.getDaysAgo());
+		DateMidnight rto = new DateMidnight().minusDays(urg.getDaysAgo()-1);
 		DateMidnight rcto = new DateMidnight().plusDays(1);
 		EncounterType referralEncounterType = Context.getEncounterService().getEncounterType("ANC Referral");
 		EncounterType referralConfirmationEncounterType = Context.getEncounterService().getEncounterType("ANC Referral Confirmation");
@@ -53,13 +56,22 @@ public class ReferralReminderAlertTask extends AbstractTask {
 		
 		referralLoop:
 		for (Encounter referral : referrals) {
+			Urgency referralUrgency = Urgency.getUrgencyForEncounter(referral);
+			System.out.println("Checking referral " + referral + " with urgency " + referralUrgency + " (against urgnecy=" + urg + ")");
+			if (referralUrgency==null || !referralUrgency.equals(urg))
+				continue referralLoop;
+
 			try {
 				Encounter confirmation;
 				do {
 					confirmation = confirmationIter.next();
+					System.out.println("against confirmation " + confirmation);
+					
+					DateMidnight referralTime = new DateMidnight(referral.getEncounterDatetime());
+					DateMidnight confirmationTime = new DateMidnight(confirmation.getEncounterDatetime());
 					
 					if (referral.getPatientId().equals(confirmation.getPatientId()) &&
-						referral.getEncounterDatetime().before(confirmation.getEncounterDatetime()))
+						(referralTime.isBefore(confirmationTime) || referralTime.isEqual(confirmationTime)))
 						continue referralLoop;
 				} while (referral.getPatientId().compareTo(confirmation.getPatientId()) >= 0);
 				
